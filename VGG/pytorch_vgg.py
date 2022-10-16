@@ -24,7 +24,6 @@ class VGG_net(nn.Module):
     def forward(self,x):
         x = self.conv_layers(x)
         x = x.reshape(x.shape[0],-1) # flatten
-        print(x.shape)
         x = self.fcs(x)
         return x
 
@@ -35,17 +34,23 @@ class VGG_net(nn.Module):
         for x in architecture:
             if type(x) == int: # conv layer
                 out_channels = x
-                layers += [nn.Conv2d(in_channels, out_channels, 
+
+                layers += [nn.Conv2d(
+                in_channels=in_channels, 
+                out_channels=out_channels, 
                 kernel_size = (3,3), stride = (1,1), padding = (1,1)),
                 nn.BatchNorm2d(x), # not in original VGG paper because it was not invented at that time
                 nn.ReLU()]
+
                 in_channels = x
 
             elif x == 'M':
                 layers += [nn.MaxPool2d(kernel_size=(2,2), stride=(2,2))]
-            return nn.Sequential(*layers)
+    
+        return nn.Sequential(*layers)
 
 if __name__ == '__main__':
-    model = VGG_net(in_channels=3, num_classes=1000)
-    x = torch.randn(3,3,224,224) # single image input
+    device = torch.device('mps')
+    model = VGG_net(in_channels=3, num_classes=1000).to(device)
+    x = torch.randn(1,3,224,224).to(device) # single image input
     print(model(x).shape)
