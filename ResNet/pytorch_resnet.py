@@ -29,7 +29,7 @@ class block(nn.Module):
         x = self.bn3(x)
 
         if self.identity_downsample is not None:
-            identity = self.identity_downsample(identity)
+            identity = self.identity_downsample(identity) # residual
         x += identity
         x = self.relu(x)
         return x
