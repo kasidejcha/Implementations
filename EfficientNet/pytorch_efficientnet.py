@@ -67,7 +67,7 @@ class InvertedResidualBlock(nn.Module):
                 survival_prob=0.8 # stochastic depth
                 ):
         super(InvertedResidualBlock, self).__init__()
-        self.survival_prob = 0.8
+        self.survival_prob = survival_prob
         self.use_residual = in_channels == out_channels and stride == 1
         hidden_dim = in_channels * expand_ratio
         self.expand = in_channels != hidden_dim
